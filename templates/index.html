@@ -1,0 +1,2765 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HeartCare AI Health System</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                <span>♥</span>
+                <div class="pulse-line"></div>
+            </div>
+
+            <div class="brand-text">
+                <h2>HeartCare</h2>
+                <p>AI Health System</p>
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <p class="nav-title">MAIN</p>
+
+
+            <a href="{{ url_for('dashboard') }}"
+               class="nav-item {% if page == 'dashboard' %}active{% endif %}">
+
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('prediction_page') }}"
+               class="nav-item {% if page == 'prediction' %}active{% endif %}">
+
+                <span class="nav-icon">♡</span>
+                <span>Prediction</span>
+
+            </a>
+
+
+            <a href="{{ url_for('history_page') }}"
+               class="nav-item {% if page == 'history' %}active{% endif %}">
+
+                <span class="nav-icon">◷</span>
+                <span>History</span>
+
+            </a>
+
+
+            <p class="nav-title analytics-title">ANALYTICS</p>
+
+
+            <a href="{{ url_for('statistics') }}"
+               class="nav-item {% if page == 'statistics' %}active{% endif %}">
+
+                <span class="nav-icon">▥</span>
+                <span>Statistics</span>
+
+            </a>
+
+
+            <a href="{{ url_for('reports') }}"
+               class="nav-item {% if page == 'reports' %}active{% endif %}">
+
+                <span class="nav-icon">▤</span>
+                <span>Reports</span>
+
+            </a>
+
+
+            <p class="nav-title settings-title">SETTINGS</p>
+
+
+            <a href="{{ url_for('profile') }}"
+               class="nav-item {% if page == 'profile' %}active{% endif %}">
+
+                <span class="nav-icon">♙</span>
+                <span>Profile</span>
+
+            </a>
+
+
+            <a href="{{ url_for('settings') }}"
+               class="nav-item {% if page == 'settings' %}active{% endif %}">
+
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+
+            </a>
+
+
+            <a href="{{ url_for('help_page') }}"
+               class="nav-item {% if page == 'help' %}active{% endif %}">
+
+                <span class="nav-icon">?</span>
+                <span>Help</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="healthy-card">
+
+            <div class="healthy-heart">♥</div>
+
+            <h3>Stay Healthy</h3>
+
+            <p>
+                Regular checkups<br>
+                save lives
+            </p>
+
+            <div class="mini-pulse">〰〰〰</div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- ================= HEADER ================= -->
+
+        <header class="top-header">
+
+            <div class="page-title">
+
+                <div class="mobile-heart">♥</div>
+
+                <div>
+
+                    {% if page == "dashboard" %}
+
+                        <h1>Dashboard</h1>
+                        <p>AI-Powered Heart Health Overview</p>
+
+                    {% elif page == "prediction" %}
+
+                        <h1>Heart Disease Prediction</h1>
+                        <p>AI-Powered Heart Health Risk Assessment</p>
+
+                    {% elif page == "history" %}
+
+                        <h1>Prediction History</h1>
+                        <p>View your previous heart health assessments</p>
+
+                    {% elif page == "statistics" %}
+
+                        <h1>Statistics</h1>
+                        <p>Heart disease prediction analytics</p>
+
+                    {% elif page == "reports" %}
+
+                        <h1>Reports</h1>
+                        <p>Prediction reports and assessment records</p>
+
+                    {% elif page == "profile" %}
+
+                        <h1>Profile</h1>
+                        <p>HeartCare system profile</p>
+
+                    {% elif page == "settings" %}
+
+                        <h1>Settings</h1>
+                        <p>Manage your system preferences</p>
+
+                    {% elif page == "help" %}
+
+                        <h1>Help Center</h1>
+                        <p>Learn how to use HeartCare</p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div class="header-right">
+
+                <div class="model-badge">
+
+                    <div class="header-icon purple">♧</div>
+
+                    <div>
+
+                        <span>AI Model</span>
+
+                        <strong>
+                            Random Forest Classifier
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="date-badge">
+
+                    <div class="header-icon blue">▣</div>
+
+                    <div>
+
+                        <span id="current-date">Loading...</span>
+
+                        <strong id="current-time">--:--</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =====================================================
+             DASHBOARD
+             ===================================================== -->
+
+         {% if page == "dashboard" %} 
+
+    <!-- ================= PROFESSIONAL DASHBOARD ================= -->
+
+    <section class="overview-page">
+
+        <div class="page-intro">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Overview of your heart health predictions</p>
+            </div>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="summary-cards">
+
+            <div class="summary-card purple-card">
+                <div class="summary-icon">▣</div>
+                <div>
+                    <span>Total Predictions</span>
+                    <strong>{{ history|length }}</strong>
+                    <small>All time predictions</small>
+                </div>
+            </div>
+
+            <div class="summary-card green-card">
+                <div class="summary-icon">✓</div>
+                <div>
+                    <span>Low Risk</span>
+                    <strong>
+                        {{ history|selectattr("prediction", "equalto", 0)|list|length }}
+                    </strong>
+                    <small>Healthy assessments</small>
+                </div>
+            </div>
+
+            <div class="summary-card red-card">
+                <div class="summary-icon">♥</div>
+                <div>
+                    <span>High Risk</span>
+                    <strong>
+                        {{ history|selectattr("prediction", "equalto", 1)|list|length }}
+                    </strong>
+                    <small>Require attention</small>
+                </div>
+            </div>
+
+            <div class="summary-card blue-card">
+                <div class="summary-icon">◉</div>
+                <div>
+                    <span>Model Accuracy</span>
+                    <strong>98.54%</strong>
+                    <small>Random Forest</small>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- DASHBOARD CONTENT -->
+        <div class="dashboard-panels">
+
+            <!-- RECENT PREDICTIONS -->
+            <div class="dashboard-panel recent-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Recent Predictions</h2>
+                        <p>Latest heart disease assessments</p>
+                    </div>
+
+                    <a href="{{ url_for('history_page') }}">
+                        View All →
+                    </a>
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table class="professional-table">
+
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Age</th>
+                                <th>Sex</th>
+                                <th>Risk</th>
+                                <th>Probability</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        {% for row in history[-5:]|reverse %}
+
+                            <tr>
+
+                                <td>{{ row["date_time"] }}</td>
+
+                                <td>{{ row["age"] }}</td>
+
+                                <td>
+                                    {% if row["sex"] == 1 %}
+                                        Male
+                                    {% else %}
+                                        Female
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if row["prediction"] == 1 %}
+                                        <span class="badge high">High Risk</span>
+                                    {% else %}
+                                        <span class="badge low">Low Risk</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ row["probability"] }}%</td>
+
+                            </tr>
+
+                        {% else %}
+
+                            <tr>
+                                <td colspan="5" class="empty-row">
+                                    No predictions yet.
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- RISK DISTRIBUTION -->
+            <div class="dashboard-panel chart-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Risk Distribution</h2>
+                        <p>Based on all predictions</p>
+                    </div>
+                </div>
+
+                <div class="donut-area">
+
+                    <div class="donut-chart">
+                        <div class="donut-center">
+                            <strong>{{ history|length }}</strong>
+                            <span>Total</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-legend">
+
+                        <div>
+                            <span class="legend-dot low-dot"></span>
+                            <div>
+                                <strong>Low Risk</strong>
+                                <small>
+                                    {{ history|selectattr("prediction", "equalto", 0)|list|length }}
+                                    predictions
+                                </small>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="legend-dot high-dot"></span>
+                            <div>
+                                <strong>High Risk</strong>
+                                <small>
+                                    {{ history|selectattr("prediction", "equalto", 1)|list|length }}
+                                    predictions
+                                </small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+            {% endif %}
+
+    {% if page == "statistics" %}
+
+    <section class="overview-page">
+
+        <div class="page-intro">
+            <div>
+                <h1>Statistics</h1>
+                <p>Detailed analytics and insights</p>
+            </div>
+        </div>
+
+
+        <div class="summary-cards statistics-cards">
+
+            <div class="summary-card purple-card">
+                <div class="summary-icon">▣</div>
+                <div>
+                    <span>Total Predictions</span>
+                    <strong>{{ history|length }}</strong>
+                    <small>All time predictions</small>
+                </div>
+            </div>
+
+
+            <div class="summary-card green-card">
+                <div class="summary-icon">✓</div>
+                <div>
+                    <span>Low Risk Predictions</span>
+                    <strong>
+                        {{ history|selectattr("prediction", "equalto", 0)|list|length }}
+                    </strong>
+                    <small>Positive assessments</small>
+                </div>
+            </div>
+
+
+            <div class="summary-card red-card">
+                <div class="summary-icon">♥</div>
+                <div>
+                    <span>High Risk Predictions</span>
+                    <strong>
+                        {{ history|selectattr("prediction", "equalto", 1)|list|length }}
+                    </strong>
+                    <small>Need attention</small>
+                </div>
+            </div>
+
+
+            <div class="summary-card blue-card">
+                <div class="summary-icon">◉</div>
+                <div>
+                    <span>Average Risk Score</span>
+                    <strong>
+                        {% if history %}
+                            {{ (history|map(attribute="probability")|map("float")|sum / history|length)|round(2) }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </strong>
+                    <small>Overall average</small>
+                </div>
+            </div>
+
+
+            <div class="summary-card purple-card">
+                <div class="summary-icon">★</div>
+                <div>
+                    <span>Model Accuracy</span>
+                    <strong>98.54%</strong>
+                    <small>Random Forest</small>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="statistics-grid">
+
+            <div class="dashboard-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Risk Distribution</h2>
+                        <p>Percentage breakdown</p>
+                    </div>
+                </div>
+
+                <div class="large-donut">
+                    <div class="large-donut-center">
+                        <strong>{{ history|length }}</strong>
+                        <span>Total</span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Risk Trend Over Time</h2>
+                        <p>Prediction trends</p>
+                    </div>
+                </div>
+
+                <div class="trend-bars">
+
+                    {% for row in history[-7:] %}
+
+                    <div class="trend-item">
+
+                        <div class="trend-label">
+                            <span>{{ row["date_time"] }}</span>
+                            <strong>{{ row["probability"] }}%</strong>
+                        </div>
+
+                        <div class="trend-track">
+
+                            <div
+                                class="trend-fill
+                                {% if row['prediction'] == 1 %}
+                                    trend-high
+                                {% else %}
+                                    trend-low
+                                {% endif %}"
+                                style="width: {{ row['probability'] }}%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+        <!-- =====================================================
+             PREDICTION
+             ===================================================== -->
+
+        {% if page == "prediction" %}
+
+        <section class="dashboard-grid">
+
+
+            <!-- PATIENT INFORMATION -->
+
+            <div class="card patient-card">
+
+                <div class="card-heading">
+
+                    <div class="heading-icon purple-icon">
+                        ♟
+                    </div>
+
+                    <div>
+
+                        <h2>Patient Information</h2>
+
+                        <p>
+                            Please provide accurate information
+                            for prediction
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form action="{{ url_for('prediction_page') }}"
+                      method="POST"
+                      id="predictionForm">
+
+
+                    <div class="form-grid">
+
+
+                        <!-- AGE -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">♙</span>
+                                Age (years)
+                            </label>
+
+                            <input
+                                type="number"
+                                name="age"
+                                placeholder="Enter age"
+                                min="1"
+                                max="120"
+                                required>
+
+                        </div>
+
+
+                        <!-- SEX -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">⚥</span>
+                                Sex
+                            </label>
+
+                            <select name="sex" required>
+
+                                <option value="1">
+                                    Male
+                                </option>
+
+                                <option value="0">
+                                    Female
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- CP -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">♡</span>
+                                Chest Pain Type
+                            </label>
+
+                            <select name="cp" required>
+
+                                <option value="" disabled selected>
+                                    Select chest pain type
+                                </option>
+
+                                <option value="0">
+                                    Typical Angina
+                                </option>
+
+                                <option value="1">
+                                    Atypical Angina
+                                </option>
+
+                                <option value="2">
+                                    Non-anginal Pain
+                                </option>
+
+                                <option value="3">
+                                    Asymptomatic
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- BP -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">♨</span>
+                                Resting Blood Pressure (mm Hg)
+                            </label>
+
+                            <input
+                                type="number"
+                                name="trestbps"
+                                placeholder="Enter resting BP"
+                                required>
+
+                        </div>
+
+
+                        <!-- CHOLESTEROL -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">♧</span>
+                                Cholesterol (mg/dl)
+                            </label>
+
+                            <input
+                                type="number"
+                                name="chol"
+                                placeholder="Enter cholesterol"
+                                required>
+
+                        </div>
+
+
+                        <!-- FBS -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">◉</span>
+                                Fasting Blood Sugar &gt; 120 mg/dl
+                            </label>
+
+                            <select name="fbs" required>
+
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- REST ECG -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">⌁</span>
+                                Resting ECG
+                            </label>
+
+                            <select name="restecg" required>
+
+                                <option value="" disabled selected>
+                                    Select resting ECG
+                                </option>
+
+                                <option value="0">
+                                    Normal
+                                </option>
+
+                                <option value="1">
+                                    ST-T Wave Abnormality
+                                </option>
+
+                                <option value="2">
+                                    Left Ventricular Hypertrophy
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- THALACH -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">♡</span>
+                                Maximum Heart Rate Achieved
+                            </label>
+
+                            <input
+                                type="number"
+                                name="thalach"
+                                placeholder="Enter max heart rate"
+                                required>
+
+                        </div>
+
+
+                        <!-- EXANG -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">♟</span>
+                                Exercise Induced Angina
+                            </label>
+
+                            <select name="exang" required>
+
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- OLDPEAK -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">⌁</span>
+                                Oldpeak (ST depression)
+                            </label>
+
+                            <input
+                                type="number"
+                                step="0.1"
+                                name="oldpeak"
+                                placeholder="Enter oldpeak value"
+                                required>
+
+                        </div>
+
+
+                        <!-- SLOPE -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">⌁</span>
+                                Slope of Peak Exercise ST Segment
+                            </label>
+
+                            <select name="slope" required>
+
+                                <option value="" disabled selected>
+                                    Select slope
+                                </option>
+
+                                <option value="0">
+                                    Upsloping
+                                </option>
+
+                                <option value="1">
+                                    Flat
+                                </option>
+
+                                <option value="2">
+                                    Downsloping
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- CA -->
+
+                        <div class="input-group">
+
+                            <label>
+                                <span class="field-icon">♧</span>
+                                Major Vessels (0-3)
+                            </label>
+
+                            <select name="ca" required>
+
+                                <option value="" disabled selected>
+                                    Select number (0-3)
+                                </option>
+
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- THAL -->
+
+                        <div class="input-group full-width">
+
+                            <label>
+                                <span class="field-icon">🧬</span>
+                                Thalassemia
+                            </label>
+
+                            <select name="thal" required>
+
+                                <option value="" disabled selected>
+                                    Select thalassemia type
+                                </option>
+
+                                <option value="0">
+                                    Normal
+                                </option>
+
+                                <option value="1">
+                                    Fixed Defect
+                                </option>
+
+                                <option value="2">
+                                    Reversible Defect
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <button type="submit"
+                            class="predict-button">
+
+                        <span>♥</span>
+
+                        Predict Heart Disease Risk
+
+                        <span class="button-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <div class="secure-message">
+
+                        <span>♙</span>
+
+                        Your data is secure and will not be
+                        shared with anyone.
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+
+            <!-- RESULT -->
+
+            <div class="card result-card">
+
+                <div class="card-heading">
+
+                    <div class="heading-icon result-icon">
+                        ⌁
+                    </div>
+
+                    <div>
+
+                        <h2>Prediction Result</h2>
+
+                        <p>
+                            AI analysis based on provided information
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RESULT CIRCLE -->
+
+                <div class="risk-display
+                    {% if prediction == 1 %}
+                        high-risk
+                    {% else %}
+                        low-risk
+                    {% endif %}">
+
+                    <div class="risk-ring">
+
+                        <div class="risk-inner">
+
+                            <div class="heartbeat">
+                                ♥
+                            </div>
+
+
+                            <div class="risk-title">
+
+                                {% if prediction is not none %}
+
+                                    {% if prediction == 1 %}
+                                        HIGH RISK
+                                    {% else %}
+                                        LOW RISK
+                                    {% endif %}
+
+                                {% else %}
+
+                                    NO RESULT
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="risk-subtitle">
+
+                                {% if prediction is not none %}
+
+                                    {% if prediction == 1 %}
+                                        Heart Disease Risk Detected
+                                    {% else %}
+                                        No Heart Disease Detected
+                                    {% endif %}
+
+                                {% else %}
+
+                                    Complete the assessment
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+
+                <div class="result-message">
+
+                    <strong>
+
+                        {% if prediction == 1 %}
+
+                            Please consult a healthcare professional.
+
+                        {% elif prediction == 0 %}
+
+                            Great! Your heart health appears
+                            to be at lower predicted risk.
+
+                        {% else %}
+
+                            Complete the assessment to receive
+                            your prediction.
+
+                        {% endif %}
+
+                    </strong>
+
+                    <p>
+                        This result is generated by the trained
+                        machine learning model and should not
+                        replace professional medical advice.
+                    </p>
+
+                </div>
+
+
+                <!-- PROBABILITY -->
+
+                <div class="probability-section">
+
+                    <div class="section-title">
+
+                        <span>
+                            Risk Probability
+                        </span>
+
+                        <strong>
+
+                            {% if probability is not none %}
+                                {{ probability }}%
+                            {% else %}
+                                --
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill"
+                             style="width:
+                             {% if probability is not none %}
+                                {{ probability }}%
+                             {% else %}
+                                0%
+                             {% endif %};">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SMALL CARDS -->
+
+                <div class="result-stats">
+
+
+                    <div class="stat-box">
+
+                        <div class="stat-icon green">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <span>Risk Level</span>
+
+                            <strong>
+
+                                {% if prediction == 1 %}
+                                    High
+                                {% elif prediction == 0 %}
+                                    Low
+                                {% else %}
+                                    --
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-box">
+
+                        <div class="stat-icon purple">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <span>Model Accuracy</span>
+
+                            <strong>
+                                98.54%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-box">
+
+                        <div class="stat-icon purple">
+                            ♧
+                        </div>
+
+                        <div>
+
+                            <span>AI Model Used</span>
+
+                            <strong>
+                                Random Forest
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-box">
+
+                        <div class="stat-icon red">
+                            ▣
+                        </div>
+
+                        <div>
+
+                            <span>Prediction Date</span>
+
+                            <strong id="predictionDate">
+                                --
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DISCLAIMER -->
+
+                <div class="disclaimer">
+
+                    <div class="disclaimer-icon">
+                        ⚠
+                    </div>
+
+                    <div>
+
+                        <strong>Disclaimer</strong>
+
+                        <p>
+                            This prediction is based on AI analysis
+                            and should not replace professional
+                            medical advice. Please consult a doctor
+                            for accurate diagnosis.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+
+        <!-- =====================================================
+             HISTORY
+             ===================================================== -->
+
+        {% if page == "history" %}
+
+        <section class="single-page-section">
+
+            <div class="card page-card">
+
+                <div class="card-heading">
+
+                    <div class="heading-icon purple-icon">
+                        ◷
+                    </div>
+
+                    <div>
+
+                        <h2>Prediction History</h2>
+
+                        <p>
+                            Previous heart disease assessments
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {% if history %}
+
+                <div class="history-table-wrapper">
+
+                    <table class="history-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Date & Time</th>
+                                <th>Age</th>
+                                <th>Sex</th>
+                                <th>Risk</th>
+                                <th>Probability</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                        {% for row in history %}
+
+                            <tr>
+
+                                <td>
+                                    {{ row["date_time"] }}
+                                </td>
+
+                                <td>
+                                    {{ row["age"] }}
+                                </td>
+
+                                <td>
+
+                                    {% if row["sex"] == 1 %}
+                                        Male
+                                    {% else %}
+                                        Female
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+
+                                    {% if row["prediction"] == 1 %}
+
+                                        <span class="risk-badge high">
+                                            High Risk
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="risk-badge low">
+                                            Low Risk
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    {{ row["probability"] }}%
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                {% else %}
+
+                <div class="empty-history">
+
+                    <div class="empty-icon">
+                        ♥
+                    </div>
+
+                    <p>
+                        No predictions have been made yet.
+                    </p>
+
+                    <a href="{{ url_for('prediction_page') }}">
+                        Make your first prediction →
+                    </a>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+
+        <!-- =====================================================
+             STATISTICS
+             ===================================================== -->
+
+        {% if page == "statistics" %}
+
+        <section class="single-page-section">
+
+            <div class="dashboard-cards">
+
+                <div class="dashboard-stat">
+
+                    <div class="dashboard-stat-icon purple">
+                        ◉
+                    </div>
+
+                    <div>
+
+                        <span>Total Predictions</span>
+
+                        <strong>
+                            {{ total|default(0) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-stat">
+
+                    <div class="dashboard-stat-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>Low Risk</span>
+
+                        <strong>
+                            {{ low_risk|default(0) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-stat">
+
+                    <div class="dashboard-stat-icon red">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span>High Risk</span>
+
+                        <strong>
+                            {{ high_risk|default(0) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-stat">
+
+                    <div class="dashboard-stat-icon blue">
+                        %
+                    </div>
+
+                    <div>
+
+                        <span>Model Accuracy</span>
+
+                        <strong>98.54%</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card page-card statistics-card">
+
+                <div class="card-heading">
+
+                    <div class="heading-icon purple-icon">
+                        ▥
+                    </div>
+
+                    <div>
+
+                        <h2>Risk Distribution</h2>
+
+                        <p>
+                            Distribution of recorded predictions
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="statistics-content">
+
+                    <div class="stat-progress">
+
+                        <div class="section-title">
+
+                            <span>
+                                Low Risk
+                            </span>
+
+                            <strong>
+                                {{ low_percentage|default(0) }}%
+                            </strong>
+
+                        </div>
+
+                        <div class="progress-bar">
+
+                            <div class="progress-fill green-fill"
+                                 style="width: {{ low_percentage|default(0) }}%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-progress">
+
+                        <div class="section-title">
+
+                            <span>
+                                High Risk
+                            </span>
+
+                            <strong>
+                                {{ high_percentage|default(0) }}%
+                            </strong>
+
+                        </div>
+
+                        <div class="progress-bar">
+
+                            <div class="progress-fill red-fill"
+                                 style="width: {{ high_percentage|default(0) }}%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+
+        <!-- =====================================================
+             REPORTS
+             ===================================================== -->
+
+        {% if page == "reports" %}
+
+            <section class="overview-page">
+
+                <div class="page-intro">
+                <div>
+                    <h1>Reports</h1>
+                    <p>Prediction reports and assessment records</p>
+                </div>
+            </div>
+
+
+            <div class="reports-layout">
+
+                <div class="dashboard-panel reports-table-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <h2>Prediction Reports</h2>
+                            <p>Detailed records of completed assessments</p>
+                        </div>
+
+                        <button class="report-button" onclick="window.print()">
+                            ⬇ Generate Report
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table class="professional-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Age</th>
+                                    <th>Sex</th>
+                                    <th>Risk Level</th>
+                                    <th>Probability</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                            {% for row in history|reverse %}
+
+                            <tr>
+
+                                <td>{{ row["date_time"] }}</td>
+
+                                <td>{{ row["age"] }}</td>
+
+                                <td>
+                                    {% if row["sex"] == 1 %}
+                                        Male
+                                    {% else %}
+                                        Female
+                                    {% endif %}
+                                </td>
+
+                                <td>
+
+                                    {% if row["prediction"] == 1 %}
+
+                                        <span class="badge high">
+                                            High Risk
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge low">
+                                            Low Risk
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    {{ row["probability"] }}%
+                                </td>
+
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="5" class="empty-row">
+                                    No reports available yet.
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REPORT SUMMARY -->
+
+                <div class="dashboard-panel report-summary">
+
+                    <h2>Report Summary</h2>
+                    <p>Overview statistics</p>
+
+
+                    <div class="report-stat">
+                        <span>Total Reports</span>
+                        <strong>{{ history|length }}</strong>
+                    </div>
+
+
+                    <div class="report-stat">
+                        <span>Low Risk Reports</span>
+                        <strong>
+                            {{ history|selectattr("prediction", "equalto", 0)|list|length }}
+                        </strong>
+                    </div>
+
+
+                    <div class="report-stat">
+                        <span>High Risk Reports</span>
+                        <strong>
+                            {{ history|selectattr("prediction", "equalto", 1)|list|length }}
+                        </strong>
+                    </div>
+
+
+                    <div class="report-stat">
+                        <span>Model Accuracy</span>
+                        <strong>98.54%</strong>
+                    </div>
+
+
+                    <button class="generate-button" onclick="window.print()">
+                        ▣ Generate Summary Report
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+            <!-- =====================================================
+                PROFILE
+                ===================================================== -->
+
+            {% if page == "profile" %}
+
+            <!-- =====================================================
+        PROFILE
+        ===================================================== -->
+
+
+    <section class="settings-page">
+
+        <!-- PROFILE HERO -->
+
+        <div class="profile-hero-card">
+
+            <div class="profile-hero-left">
+
+                <div class="profile-main-avatar">
+                    <span>♥</span>
+                    <div class="avatar-pulse"></div>
+                </div>
+
+                <div class="profile-identity">
+
+                    <div class="profile-label">
+                        HEARTCARE AI HEALTH SYSTEM
+                    </div>
+
+                    <h2>HeartCare AI</h2>
+
+                    <p>
+                        Intelligent heart disease risk assessment
+                        powered by Machine Learning.
+                    </p>
+
+                    <div class="profile-status">
+                        <span class="status-dot"></span>
+                        System Active
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-hero-model">
+
+                <span class="model-label">
+                    CURRENT AI MODEL
+                </span>
+
+                <strong>
+                    Random Forest
+                </strong>
+
+                <small>
+                    Classifier
+                </small>
+
+                <div class="model-active">
+                    <span>●</span> Active
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROFILE CONTENT -->
+
+        <div class="profile-grid">
+
+
+            <!-- SYSTEM INFORMATION -->
+
+            <div class="modern-panel">
+
+                <div class="modern-panel-header">
+
+                    <div class="panel-icon purple-panel-icon">
+                        ◈
+                    </div>
+
+                    <div>
+                        <h3>System Information</h3>
+                        <p>Overview of the HeartCare platform</p>
+                    </div>
+
+                </div>
+
+
+                <div class="info-list">
+
+                    <div class="info-item">
+
+                        <div class="info-item-icon">
+                            ◉
+                        </div>
+
+                        <div class="info-item-content">
+                            <span>Application</span>
+                            <strong>
+                                HeartCare AI Health System
+                            </strong>
+                        </div>
+
+                        <span class="info-badge">
+                            Active
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-item-icon">
+                            ♧
+                        </div>
+
+                        <div class="info-item-content">
+                            <span>Machine Learning Model</span>
+                            <strong>
+                                Random Forest Classifier
+                            </strong>
+                        </div>
+
+                        <span class="info-badge">
+                            AI
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-item-icon">
+                            %
+                        </div>
+
+                        <div class="info-item-content">
+                            <span>Model Accuracy</span>
+                            <strong>
+                                98.54%
+                            </strong>
+                        </div>
+
+                        <span class="info-badge success-badge">
+                            Verified
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-item-icon">
+                            #
+                        </div>
+
+                        <div class="info-item-content">
+                            <span>Clinical Input Features</span>
+                            <strong>
+                                13 Clinical Features
+                            </strong>
+                        </div>
+
+                        <span class="info-badge">
+                            13
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SYSTEM STATUS -->
+
+            <div class="modern-panel status-panel">
+
+                <div class="modern-panel-header">
+
+                    <div class="panel-icon green-panel-icon">
+                        ✓
+                    </div>
+
+                    <div>
+                        <h3>System Status</h3>
+                        <p>Current application status</p>
+                    </div>
+
+                </div>
+
+
+                <div class="system-status-card">
+
+                    <div class="status-large-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            All Systems Operational
+                        </strong>
+
+                        <p>
+                            HeartCare prediction services
+                            are running normally.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="status-metrics">
+
+                    <div class="status-metric">
+                        <span>Prediction Engine</span>
+                        <strong>
+                            <i></i> Online
+                        </strong>
+                    </div>
+
+                    <div class="status-metric">
+                        <span>AI Model</span>
+                        <strong>
+                            <i></i> Ready
+                        </strong>
+                    </div>
+
+                    <div class="status-metric">
+                        <span>Data Processing</span>
+                        <strong>
+                            <i></i> Secure
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ABOUT HEARTCARE -->
+
+        <div class="modern-panel about-panel">
+
+            <div class="modern-panel-header">
+
+                <div class="panel-icon blue-panel-icon">
+                    ♥
+                </div>
+
+                <div>
+                    <h3>About HeartCare</h3>
+                    <p>Machine learning powered health assessment</p>
+                </div>
+
+            </div>
+
+
+            <div class="about-content">
+
+                <div class="about-text">
+
+                    <p>
+                        HeartCare AI Health System is a machine
+                        learning based application designed to
+                        estimate heart disease risk using clinical
+                        patient information.
+                    </p>
+
+                    <p>
+                        The system uses a trained Random Forest
+                        classifier to analyze 13 clinical features
+                        and provide a predicted risk level along
+                        with a probability score.
+                    </p>
+
+                </div>
+
+
+                <div class="about-highlights">
+
+                    <div>
+                        <strong>13</strong>
+                        <span>Clinical Features</span>
+                    </div>
+
+                    <div>
+                        <strong>RF</strong>
+                        <span>ML Algorithm</span>
+                    </div>
+
+                    <div>
+                        <strong>98.54%</strong>
+                        <span>Model Accuracy</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MEDICAL NOTE -->
+
+        <div class="medical-note">
+
+            <div class="medical-note-icon">
+                ⚕
+            </div>
+
+            <div>
+
+                <strong>
+                    Important Medical Notice
+                </strong>
+
+                <p>
+                    HeartCare is an educational machine learning
+                    application. Its predictions are not a medical
+                    diagnosis and should not replace advice from a
+                    qualified healthcare professional.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+            {% endif %}
+
+
+                <!-- =====================================================
+            SETTINGS
+            ===================================================== -->
+
+        {% if page == "settings" %}
+
+        <section class="settings-page">
+
+
+            <!-- SETTINGS HERO -->
+
+            <div class="settings-hero">
+
+                <div class="settings-hero-icon">
+                    ⚙
+                </div>
+
+                <div>
+
+                    <span class="settings-overline">
+                        HEARTCARE CONFIGURATION
+                    </span>
+
+                    <h2>System Settings</h2>
+
+                    <p>
+                        Manage your HeartCare AI system preferences
+                        and review application configuration.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SETTINGS GRID -->
+
+            <div class="settings-grid">
+
+
+                <!-- AI MODEL -->
+
+                <div class="setting-card">
+
+                    <div class="setting-card-top">
+
+                        <div class="setting-icon purple-setting">
+                            ♧
+                        </div>
+
+                        <span class="setting-state active-state">
+                            Active
+                        </span>
+
+                    </div>
+
+                    <h3>AI Prediction Model</h3>
+
+                    <p>
+                        Machine learning model currently used
+                        for heart disease prediction.
+                    </p>
+
+                    <div class="setting-value">
+
+                        <div>
+                            <span>Model</span>
+                            <strong>Random Forest Classifier</strong>
+                        </div>
+
+                        <span class="value-arrow">›</span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PREDICTION HISTORY -->
+
+                <div class="setting-card">
+
+                    <div class="setting-card-top">
+
+                        <div class="setting-icon blue-setting">
+                            ◷
+                        </div>
+
+                        <span class="setting-state enabled-state">
+                            Enabled
+                        </span>
+
+                    </div>
+
+                    <h3>Prediction History</h3>
+
+                    <p>
+                        Previous prediction results are retained
+                        for dashboard analytics and reports.
+                    </p>
+
+                    <div class="setting-value">
+
+                        <div>
+                            <span>Storage</span>
+                            <strong>Local Application Storage</strong>
+                        </div>
+
+                        <span class="toggle-display active-toggle">
+                            <i></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DATA PRIVACY -->
+
+                <div class="setting-card">
+
+                    <div class="setting-card-top">
+
+                        <div class="setting-icon green-setting">
+                            ✓
+                        </div>
+
+                        <span class="setting-state protected-state">
+                            Protected
+                        </span>
+
+                    </div>
+
+                    <h3>Data Privacy</h3>
+
+                    <p>
+                        Patient information is processed locally
+                        by this application.
+                    </p>
+
+                    <div class="setting-value">
+
+                        <div>
+                            <span>Privacy Status</span>
+                            <strong>Local Processing</strong>
+                        </div>
+
+                        <span class="privacy-check">
+                            ✓
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SECURITY -->
+
+                <div class="setting-card">
+
+                    <div class="setting-card-top">
+
+                        <div class="setting-icon red-setting">
+                            ⛨
+                        </div>
+
+                        <span class="setting-state secure-state">
+                            Secure
+                        </span>
+
+                    </div>
+
+                    <h3>Application Security</h3>
+
+                    <p>
+                        HeartCare processes prediction requests
+                        within the local application environment.
+                    </p>
+
+                    <div class="setting-value">
+
+                        <div>
+                            <span>Security</span>
+                            <strong>Protected Environment</strong>
+                        </div>
+
+                        <span class="security-check">
+                            ✓
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONFIGURATION PANEL -->
+
+            <div class="modern-panel configuration-panel">
+
+                <div class="modern-panel-header">
+
+                    <div class="panel-icon purple-panel-icon">
+                        ◈
+                    </div>
+
+                    <div>
+                        <h3>Application Configuration</h3>
+                        <p>Current HeartCare system configuration</p>
+                    </div>
+
+                </div>
+
+
+                <div class="configuration-grid">
+
+                    <div class="configuration-item">
+                        <span>Prediction Algorithm</span>
+                        <strong>Random Forest</strong>
+                    </div>
+
+                    <div class="configuration-item">
+                        <span>Input Features</span>
+                        <strong>13 Clinical Features</strong>
+                    </div>
+
+                    <div class="configuration-item">
+                        <span>Prediction Output</span>
+                        <strong>Risk + Probability</strong>
+                    </div>
+
+                    <div class="configuration-item">
+                        <span>Application Status</span>
+                        <strong class="online-text">
+                            <i></i> Operational
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRIVACY NOTICE -->
+
+            <div class="settings-notice">
+
+                <div class="settings-notice-icon">
+                    🔒
+                </div>
+
+                <div>
+
+                    <strong>
+                        Your privacy matters
+                    </strong>
+
+                    <p>
+                        Patient data is used only for prediction
+                        processing and application analytics.
+                        No external sharing is performed by this
+                        application.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+                {% endif %}
+
+
+
+            <!-- =====================================================
+                HELP
+                ===================================================== -->
+
+            {% if page == "help" %}
+
+
+    <section class="settings-page">
+
+
+        <!-- HELP HERO -->
+
+        <div class="help-hero">
+
+            <div class="help-hero-icon">
+                ?
+            </div>
+
+            <div>
+
+                <span class="help-overline">
+                    HEARTCARE SUPPORT
+                </span>
+
+                <h2>How HeartCare Works</h2>
+
+                <p>
+                    Follow these simple steps to perform a
+                    heart disease risk assessment.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- STEPS -->
+
+        <div class="help-steps">
+
+
+            <div class="help-step-card">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <div class="step-icon">
+                    ♙
+                </div>
+
+                <div class="step-content">
+
+                    <span class="step-label">
+                        STEP 01
+                    </span>
+
+                    <h3>Enter Patient Data</h3>
+
+                    <p>
+                        Open the Prediction page and provide
+                        all 13 clinical values required by
+                        the machine learning model.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="help-step-card">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <div class="step-icon">
+                    ♥
+                </div>
+
+                <div class="step-content">
+
+                    <span class="step-label">
+                        STEP 02
+                    </span>
+
+                    <h3>Run Prediction</h3>
+
+                    <p>
+                        Click the Predict Heart Disease Risk
+                        button to submit the patient information
+                        to the trained model.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="help-step-card">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <div class="step-icon">
+                    ◉
+                </div>
+
+                <div class="step-content">
+
+                    <span class="step-label">
+                        STEP 03
+                    </span>
+
+                    <h3>Review Result</h3>
+
+                    <p>
+                        The system displays the predicted risk
+                        level together with the estimated
+                        probability score.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="help-step-card">
+
+                <div class="step-number">
+                    04
+                </div>
+
+                <div class="step-icon">
+                    ◷
+                </div>
+
+                <div class="step-content">
+
+                    <span class="step-label">
+                        STEP 04
+                    </span>
+
+                    <h3>Check History</h3>
+
+                    <p>
+                        Visit Prediction History to review
+                        previously completed heart health
+                        assessments.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUICK NAVIGATION -->
+
+        <div class="modern-panel quick-help-panel">
+
+            <div class="modern-panel-header">
+
+                <div class="panel-icon purple-panel-icon">
+                    ⌘
+                </div>
+
+                <div>
+                    <h3>Quick Navigation</h3>
+                    <p>Find the feature you need</p>
+                </div>
+
+            </div>
+
+
+            <div class="quick-help-grid">
+
+                <a href="{{ url_for('prediction_page') }}"
+                class="quick-help-item">
+
+                    <div class="quick-help-icon purple-help">
+                        ♥
+                    </div>
+
+                    <div>
+                        <strong>Make Prediction</strong>
+                        <span>Assess heart disease risk</span>
+                    </div>
+
+                    <b>→</b>
+
+                </a>
+
+
+                <a href="{{ url_for('history_page') }}"
+                class="quick-help-item">
+
+                    <div class="quick-help-icon blue-help">
+                        ◷
+                    </div>
+
+                    <div>
+                        <strong>View History</strong>
+                        <span>Review previous predictions</span>
+                    </div>
+
+                    <b>→</b>
+
+                </a>
+
+
+                <a href="{{ url_for('statistics') }}"
+                class="quick-help-item">
+
+                    <div class="quick-help-icon green-help">
+                        ▥
+                    </div>
+
+                    <div>
+                        <strong>View Statistics</strong>
+                        <span>Explore prediction analytics</span>
+                    </div>
+
+                    <b>→</b>
+
+                </a>
+
+
+                <a href="{{ url_for('reports') }}"
+                class="quick-help-item">
+
+                    <div class="quick-help-icon red-help">
+                        ▤
+                    </div>
+
+                    <div>
+                        <strong>View Reports</strong>
+                        <span>Review assessment reports</span>
+                    </div>
+
+                    <b>→</b>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- MEDICAL DISCLAIMER -->
+
+        <div class="medical-note help-disclaimer">
+
+            <div class="medical-note-icon">
+                ⚠
+            </div>
+
+            <div>
+
+                <strong>
+                    Medical Disclaimer
+                </strong>
+
+                <p>
+                    HeartCare is an educational machine learning
+                    project and is not a medical diagnostic tool.
+                    AI-generated predictions should not replace
+                    professional medical advice or diagnosis.
+                    Always consult a qualified healthcare professional.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+                {% endif %}
+
+
+
+        <!-- =====================================================
+             FOOTER
+             ===================================================== -->
+
+        <footer>
+
+            <div>
+                ♡ &nbsp; Heart Disease Prediction System
+            </div>
+
+            <div>
+                Built with
+                <span class="footer-heart">♥</span>
+                using Machine Learning
+            </div>
+
+            <div>
+                Stay Healthy, Stay Happy! 🌿
+            </div>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+    /* ================= DATE & TIME ================= */
+
+    function updateDateTime() {
+
+        const now = new Date();
+
+        const dateOptions = {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        };
+
+        const date =
+            now.toLocaleDateString(
+                "en-US",
+                dateOptions
+            );
+
+        const time =
+            now.toLocaleTimeString(
+                "en-US",
+                {
+                    hour: "numeric",
+                    minute: "2-digit"
+                }
+            );
+
+
+        const dateElement =
+            document.getElementById("current-date");
+
+        const timeElement =
+            document.getElementById("current-time");
+
+        const predictionDate =
+            document.getElementById("predictionDate");
+
+
+        if (dateElement) {
+            dateElement.textContent = date;
+        }
+
+
+        if (timeElement) {
+            timeElement.textContent = time;
+        }
+
+
+        if (predictionDate) {
+            predictionDate.textContent =
+                date + " " + time;
+        }
+
+    }
+
+
+    updateDateTime();
+
+    setInterval(updateDateTime, 60000);
+
+
+
+    /* ================= PREDICTION FORM ================= */
+
+    const form =
+        document.getElementById("predictionForm");
+
+
+    if (form) {
+
+        form.addEventListener(
+            "submit",
+            function () {
+
+                const button =
+                    form.querySelector(
+                        ".predict-button"
+                    );
+
+
+                if (button) {
+
+                    button.classList.add(
+                        "loading"
+                    );
+
+                    button.innerHTML =
+                        '<span class="spinner"></span>' +
+                        ' Analyzing Patient Data...';
+
+                }
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
+       IMPORTANT:
+       DO NOT use event.preventDefault() for sidebar links.
+       Flask must receive those navigation requests.
+       ===================================================== */
+
+</script>
+
+
+</body>
+
+</html>
